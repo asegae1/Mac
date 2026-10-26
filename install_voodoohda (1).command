@@ -21,7 +21,8 @@ P="$OC/config.plist"
 # バックアップ
 BK=~/EFI_backup_$(date +%m%d%H%M)
 cp -R /Volumes/EFI/EFI "$BK"
-echo "バックアップ: $BK"
+cp "$P" "$P.bak_$(date +%m%d%H%M)"
+echo "バックアップ: $BK （config.plist は EFI 内にも .bak を作成）"
 
 # ダウンロードと展開
 cd ~/Downloads
@@ -41,7 +42,7 @@ i=0
 while $PB -c "Print :Kernel:Add:$i:BundlePath" "$P" >/dev/null 2>&1; do
   b=$($PB -c "Print :Kernel:Add:$i:BundlePath" "$P")
   case "$b" in
-    *impleHDA*) $PB -c "Set :Kernel:Add:$i:Enabled false" "$P"; echo "無効化: $b" ;;
+    *impleHDA*|*AppleALC*) $PB -c "Set :Kernel:Add:$i:Enabled false" "$P"; echo "無効化: $b" ;;
   esac
   i=$((i+1))
 done
